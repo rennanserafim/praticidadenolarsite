@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Participe do Sorteio Exclusivo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Responsivo */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .product-video {
+            max-width: 100%;
+            height: auto; /* Mantém a proporção do vídeo */
+            margin-bottom: 20px;
+        }
+
+        .product-info {
+            text-align: center;
+        }
+
+        .rules-section {
+            margin-top: 20px;
+        }
+
+        form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        input[type="text"],
+        input[type="tel"] {
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%; /* Faz o input ocupar toda a largura disponível */
+            box-sizing: border-box; /* Inclui padding e border no cálculo da largura */
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #f3f3f3;
+            margin-top: 20px;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: #4CAF50;
+            width: 0%;
+            transition: width 1s linear;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Media queries para responsividade */
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            input[type="text"],
+            input[type="tel"],
+            button {
+                font-size: 0.9rem; /* Reduz o tamanho da fonte em telas menores */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="product-section">
+            <h1>Sorteio Exclusivo: Organizador Multifuncional</h1>
+            <video controls class="product-video">
+                <source src="https://cvf.shopee.com.br/file/fd83cbe1fcd1326fce98b5ddbb8d51cb" type="video/mp4">
+                Seu navegador não suporta a reprodução de vídeos.
+            </video>
+            <div class="product-info">
+                <p>Ganhe este <strong>organizador multifuncional premium</strong>, ideal para deixar sua casa organizada e prática! Um produto de alta qualidade que vai facilitar sua vida!</p>
+                <p>🎁 <strong>Valor: R$ 79,90</strong> - Grátis para você!</p>
+                <p class="highlight">Participe agora e aproveite essa oportunidade!</p>
+                <p class="cta">Não perca, o sorteio acontecerá em 12/11/2024.</p>
+            </div>
+        </div>
+
+        <div class="rules-section">
+            <h2>Como Participar:</h2>
+            <ul>
+                <li>1 - Seguir o Instagram <a href="https://www.instagram.com/praticidadenolarbrasil" target="_blank">@praticidadenolarbrasil</a></li>
+                <li>2 - Preencha os dados abaixo. O WhatsApp deve ser válido, pois entraremos em contato por ele.</li>
+            </ul>
+        </div>
+
+        <form id="sorteioForm">
+            <label for="name">Nome:</label>
+            <input type="text" id="name" name="name" placeholder="Digite seu nome completo" required>
+
+            <label for="whatsapp">WhatsApp:</label>
+            <input type="tel" id="whatsapp" name="whatsapp" placeholder="Digite seu WhatsApp" required>
+
+            <button type="submit">Quero Participar!</button>
+        </form>
+
+        <div id="thanksMessage" class="hidden">
+            <h2>Obrigado <span id="displayName"></span>!</h2>
+            <p>Por participar do sorteio que ocorrerá em 12/11/2024. Caso seja o ganhador, entraremos em contato pelo WhatsApp <span id="displayWhatsApp"></span>. Fique ligado!</p>
+            <p id="loadingText">Aguarde <span id="countdown">5</span> segundos para validar sua participação...</p>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('sorteioForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evita o envio padrão do formulário
+
+            // Obtendo os valores digitados pelo usuário
+            const name = document.getElementById('name').value;
+            const whatsapp = document.getElementById('whatsapp').value;
+
+            // Envia os dados para o backend
+            fetch('http://localhost:3000/participants', { // Mudança aqui
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, whatsapp }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao adicionar participante');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Participante adicionado:', data);
+                // Exibir a mensagem de agradecimento personalizada
+                document.getElementById('displayName').textContent = name;
+                document.getElementById('displayWhatsApp').textContent = whatsapp;
+
+                // Ocultando o formulário e mostrando a mensagem de agradecimento
+                document.getElementById('sorteioForm').classList.add('hidden');
+                document.getElementById('thanksMessage').classList.remove('hidden');
+
+                // Inicializando contagem regressiva
+                let countdownElement = document.getElementById('countdown');
+                let timeLeft = 5; // Alterado para 5 segundos
+                countdownElement.textContent = timeLeft;
+
+                // Animação de carregamento da barra de progresso
+                let progressBar = document.querySelector('.progress');
+                progressBar.style.width = '0%'; // Inicializa a barra de progresso
+
+                let interval = setInterval(function() {
+                    timeLeft--; // Decrementa o tempo restante
+                    countdownElement.textContent = timeLeft; // Atualiza o texto da contagem regressiva
+                    progressBar.style.width = (100 - timeLeft * 20) + '%'; // Atualiza a barra de progresso (100% dividido por 5 segundos)
+
+                    if (timeLeft === 0) {
+                        clearInterval(interval);
+                        // Redireciona para o link da Shopee após o tempo acabar
+                        window.location.href = "https://s.shopee.com.br/6ASnmwpI1t";
+                    }
+                }, 1000); // A cada 1 segundo
+            })
+            .catch((error) => {
+                console.error('Erro:', error);
+            });
+        });
+    </script>
+</body>
+</html>

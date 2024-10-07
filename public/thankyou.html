@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obrigado por Participar!</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div id="thanksMessage">
+            <h2>Obrigado por participar!</h2>
+            <p>O sorteio acontecerá em 12/11/2024. Caso seja o ganhador, entraremos em contato pelo WhatsApp.</p>
+            <p>Aguarde 5 segundos para validar sua participação...</p>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let countdownElement = document.createElement('span');
+        let timeLeft = 5; // 5 segundos de contagem
+        document.body.appendChild(countdownElement);
+
+        // Animação da barra de progresso e contagem regressiva
+        let progressBar = document.querySelector('.progress');
+        progressBar.style.width = '0%';
+
+        let interval = setInterval(function() {
+            timeLeft--;
+            countdownElement.textContent = 'Aguarde ' + timeLeft + ' segundos...';
+
+            // Atualiza a barra de progresso (5 segundos)
+            progressBar.style.width = (100 - timeLeft * 20) + '%';
+
+            if (timeLeft === 0) {
+                clearInterval(interval);
+                // Redireciona para o link da Shopee
+                window.location.href = "https://s.shopee.com.br/6ASnmwpI1t";
+            }
+        }, 1000); // A cada 1 segundo
+    </script>
+</body>
+</html>

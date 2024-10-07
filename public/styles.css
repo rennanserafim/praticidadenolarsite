@@ -1,0 +1,97 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.product-video {
+    max-width: 100%;
+    height: auto; /* Mantém a proporção do vídeo */
+    margin-bottom: 20px;
+}
+
+.product-info {
+    text-align: center;
+}
+
+.rules-section {
+    margin-top: 20px;
+}
+
+form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+input[type="text"],
+input[type="tel"] {
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%; /* Faz o input ocupar toda a largura disponível */
+    box-sizing: border-box; /* Inclui padding e border no cálculo da largura */
+}
+
+button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #f3f3f3;
+    margin-top: 20px;
+}
+
+.progress {
+    height: 100%;
+    background-color: #4CAF50;
+    width: 0%;
+    transition: width 1s linear;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Media queries para responsividade */
+@media (max-width: 600px) {
+    .container {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    button {
+        font-size: 0.9rem; /* Reduz o tamanho da fonte em telas menores */
+    }
+}

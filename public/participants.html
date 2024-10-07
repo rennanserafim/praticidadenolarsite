@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Participantes</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif; /* Fonte padrão */
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9; /* Cor de fundo suave */
+        }
+
+        .container {
+            max-width: 800px; /* Largura máxima da tabela */
+            margin: 0 auto; /* Centraliza a tabela */
+            background: #fff; /* Fundo branco */
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+            border-radius: 8px; /* Bordas arredondadas */
+        }
+
+        h1 {
+            text-align: center; /* Centraliza o título */
+            color: #333; /* Cor do texto do título */
+        }
+
+        table {
+            width: 100%; /* Tabela ocupa toda a largura disponível */
+            border-collapse: collapse; /* Remove espaços entre as células */
+            margin-top: 20px; /* Espaço acima da tabela */
+        }
+
+        th, td {
+            padding: 10px; /* Espaçamento interno */
+            text-align: left; /* Alinhamento do texto à esquerda */
+            border-bottom: 1px solid #ddd; /* Linha de separação */
+            overflow: hidden; /* Evita que o conteúdo saia da célula */
+            text-overflow: ellipsis; /* Adiciona reticências (...) para textos longos */
+            white-space: nowrap; /* Impede a quebra de linha */
+        }
+
+        th {
+            background-color: #f2f2f2; /* Cor de fundo das células de cabeçalho */
+            color: #555; /* Cor do texto das células de cabeçalho */
+        }
+
+        tr:hover {
+            background-color: #f5f5f5; /* Efeito de destaque na linha ao passar o mouse */
+        }
+
+        button {
+            display: block; /* Exibe o botão como um bloco */
+            margin: 20px auto; /* Centraliza o botão */
+            padding: 10px 20px; /* Espaçamento interno do botão */
+            background-color: #4CAF50; /* Cor de fundo do botão */
+            color: white; /* Cor do texto do botão */
+            border: none; /* Remove a borda padrão */
+            border-radius: 5px; /* Bordas arredondadas no botão */
+            cursor: pointer; /* Muda o cursor ao passar o mouse */
+            font-size: 16px; /* Tamanho da fonte do botão */
+        }
+
+        button:hover {
+            background-color: #45a049; /* Cor do botão ao passar o mouse */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lista de Participantes</h1>
+        <table id="participantsTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>WhatsApp</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Os participantes serão inseridos aqui dinamicamente -->
+            </tbody>
+        </table>
+        <button id="exportButton">Exportar para Excel</button>
+    </div>
+
+    <script>
+        // Função para buscar os participantes e exibi-los na tabela
+        function fetchParticipants() {
+            fetch('/participants')  // Pega a lista de participantes do backend
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const tableBody = document.querySelector('#participantsTable tbody');
+                    tableBody.innerHTML = '';  // Limpa a tabela antes de inserir novos dados
+                    data.forEach(participant => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${participant.id}</td>
+                            <td>${participant.name}</td>
+                            <td>${participant.whatsapp}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Erro ao buscar participantes:', error));
+        }
+
+        // Função para exportar a tabela para Excel
+        function exportToExcel() {
+            // Obtém a data e hora atual
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString('pt-BR').replace(/\//g, '-');
+            const formattedTime = now.toLocaleTimeString('pt-BR').replace(/:/g, '-');
+
+            // Nome do arquivo com data e hora
+            const filename = `Planilha_participantes_do_sorteio_${formattedDate}_${formattedTime}.xlsx`;
+
+            // Redireciona para a rota de exportação com o nome do arquivo
+            window.location.href = `/export?filename=${filename}`;
+        }
+
+        // Inicializa a busca de participantes quando a página carrega
+        document.addEventListener('DOMContentLoaded', fetchParticipants);
+
+        // Adiciona o evento de clique ao botão de exportação
+        document.getElementById('exportButton').addEventListener('click', exportToExcel);
+    </script>
+</body>
+</html>
